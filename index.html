@@ -2120,14 +2120,23 @@
                           id: "corsair",
                           defaults: {
                             width: 1,
-                            color: "#8b8b8b",
+                            color: "#FACB01",
                             dash: [3, 3],
                           },
                           afterInit: (e, t, n) => {
-                            e.corsair = {
-                              x: 0,
-                              y: 0,
-                            };
+                            // Initialize crosshair at the rightmost position (last year)
+                            const chartArea = e.chartArea;
+                            if (chartArea && chartArea.left !== undefined && chartArea.right !== undefined) {
+                              e.corsair = {
+                                x: chartArea.right,
+                                y: 0,
+                              };
+                            } else {
+                              e.corsair = {
+                                x: 0,
+                                y: 0,
+                              };
+                            }
                           },
                           afterEvent: (e, t) => {
                             if (!$.isMouseDown && "click" !== t.event.type)
@@ -2161,7 +2170,7 @@
                               o.arc(s, r, 8, 0, 2 * Math.PI),
                               o.setLineDash([]),
                               o.stroke(),
-                              (o.fillStyle = "white"),
+                              (o.fillStyle = "#FACB01"),
                               o.fill(),
                               o.restore();
                           },
@@ -2328,20 +2337,29 @@
                       $.isMouseDown &&
                         ((F = parseInt(D.tooltip.title[0]) - 1), V(e));
                     }),
+                    // Set F to last year index for initial positioning
+                    F = e.length - 1,
                     F > e.length - 1 && (F = e.length - 1);
-                  const n = D.chartArea.left,
-                    o = D.chartArea.width,
-                    r = F / (e.length - 1),
-                    i = n + o * r;
-                  (D.corsair = {
-                    x: i,
-                    y: 0,
-                  }),
-                    D.update(),
-                    D.resize();
+
+                  // Update chart data
+                  D.update();
+                  D.resize();
+
+                  // Position crosshair at the last year after chart is rendered
+                  requestAnimationFrame(() => {
+                    if (D.chartArea && D.chartArea.left !== undefined && D.chartArea.width !== undefined) {
+                      const n = D.chartArea.left,
+                        o = D.chartArea.width,
+                        r = F / (e.length - 1),
+                        i = n + o * r;
+                      D.corsair = {
+                        x: i,
+                        y: D.chartArea.top || 0,
+                      };
+                      D.update('none'); // Update without animation
+                    }
+                  });
                 })(e),
-                // Set F to last year index for initial positioning
-                F = e.length - 1,
                 z(e[F]),
                 V(e),
                 (t.rentSellData = e);
