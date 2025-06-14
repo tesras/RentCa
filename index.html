@@ -1,0 +1,2456 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rent vs. Sell Calculator | Professional Real Estate Analysis Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary: #dc2626;
+        --secondary-light: #ef4444;
+        --accent: #059669;
+        --accent-light: #10b981;
+        --success: #16a34a;
+        --warning: #d97706;
+        --bg: #f8fafc;
+        --bg-secondary: #f1f5f9;
+        --card-bg: #ffffff;
+        --text: #0f172a;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --border: #e2e8f0;
+        --border-light: #f1f5f9;
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        --radius: 0.75rem;
+        --radius-lg: 1rem;
+      }
+
+      /* Compact Professional Stepper Styles */
+      .stepper-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .stepper-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        background: var(--card-bg);
+        padding: 1rem 1.5rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        position: relative;
+        width: 100%;
+      }
+
+      .stepper-nav::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 1.5rem;
+        right: 1.5rem;
+        height: 1px;
+        background: var(--border);
+        z-index: 1;
+      }
+
+      .stepper-step {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        position: relative;
+        z-index: 2;
+        background: var(--card-bg);
+        flex: 1;
+        justify-content: center;
+        max-width: 200px;
+      }
+
+      .stepper-step:hover {
+        background: var(--bg);
+      }
+
+      .stepper-step.active {
+        background: var(--primary);
+        color: white;
+        font-weight: 600;
+      }
+
+      .stepper-step.completed {
+        color: var(--success);
+        font-weight: 600;
+      }
+
+      .stepper-step-number {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .stepper-step.active .stepper-step-number {
+        background: white;
+        color: var(--primary);
+      }
+
+      .stepper-step.completed .stepper-step-number {
+        background: var(--success);
+        color: white;
+      }
+
+      .stepper-step.completed .stepper-step-number::before {
+        content: '✓';
+        font-weight: 700;
+      }
+
+      .stepper-step-title {
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+
+      .stepper-content {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+        min-height: 600px;
+        position: relative;
+        margin-top: 0;
+      }
+
+      .step-panel {
+        display: none;
+        width: 100%;
+        animation: fadeIn 0.4s ease-in-out;
+      }
+
+      .step-panel.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .step-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .step-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .stepper-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .btn {
+        padding: 1rem 2.5rem;
+        border-radius: var(--radius);
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 120px;
+        justify-content: center;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: var(--shadow);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text);
+        border: 2px solid var(--border);
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background: var(--border-light);
+        border-color: var(--primary);
+        transform: translateY(-1px);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: var(--shadow) !important;
+      }
+
+
+
+      /* Enhanced form styling for stepper */
+      .field-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Hidden Range Slider - Keep Logic, Hide Visually */
+      .with-range {
+        position: relative;
+        margin-top: 1rem;
+      }
+
+      .with-range input[type="range"] {
+        display: none; /* Hide the slider completely */
+        width: 100%;
+        height: 6px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: var(--border);
+        border-radius: 3px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Webkit Slider Thumb */
+      .with-range input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+        border: 2px solid white;
+      }
+
+      .with-range input[type="range"]::-webkit-slider-thumb:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Firefox Slider */
+      .with-range input[type="range"]::-moz-range-track {
+        width: 100%;
+        height: 6px;
+        background: var(--border);
+        border-radius: 3px;
+        border: none;
+      }
+
+      .with-range input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+      }
+
+      .with-range input[type="range"]::-moz-range-thumb:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+      }
+
+      /* Fill Effect - Hidden */
+      .with-range::before {
+        display: none; /* Hide the fill effect */
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 6px;
+        background: var(--primary);
+        border-radius: 3px;
+        width: var(--slider-progress, 0%);
+        pointer-events: none;
+        transition: width 0.15s ease;
+        z-index: 1;
+      }
+
+      /* Hover Effects */
+      .with-range:hover input[type="range"] {
+        background: var(--border-light);
+      }
+
+      .with-range:hover::before {
+        background: var(--primary-dark);
+      }
+
+      /* Loading state for calculations */
+      .calculating {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.7;
+      }
+
+      .calculating::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid var(--border);
+        border-top: 2px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Success state for completed steps */
+      .step-completed {
+        background: linear-gradient(135deg, var(--success) 0%, var(--accent) 100%);
+        color: white;
+      }
+
+      /* Enhanced tooltip styling */
+      .tooltip {
+        background: var(--text);
+        color: white;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .tooltip:hover {
+        background: var(--primary);
+        transform: scale(1.1);
+      }
+
+
+
+
+
+
+
+
+
+      .btn {
+        padding: 0.75rem 2rem;
+        border-radius: var(--radius);
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .btn-secondary:hover {
+        background: var(--border-light);
+        border-color: var(--primary);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
+        color: var(--text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+
+
+      .main-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 2rem;
+        align-items: start;
+      }
+
+      .calculator-container {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+        position: sticky;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+      }
+
+      .output-container {
+        background: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+      }
+
+      .calculator-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .calculator-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+
+      .field-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        position: relative;
+      }
+
+      .form-group label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: var(--text);
+        font-size: 0.95rem;
+        gap: 0.5rem;
+      }
+
+      .form-group label i {
+        color: var(--primary);
+        width: 1.2rem;
+        text-align: center;
+      }
+
+      .form-field-with-icon {
+        position: relative;
+      }
+
+      .form-field-with-icon input {
+        width: 100%;
+        padding: 1rem 3rem 1rem 2.5rem;
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 1rem;
+        font-weight: 500;
+        background: var(--bg);
+        transition: all 0.2s ease;
+        color: var(--text);
+      }
+
+      .form-field-with-icon input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: var(--card-bg);
+        box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+      }
+
+      .form-field-with-icon .icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .tooltip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        background: var(--primary);
+        border-radius: 50%;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: help;
+        margin-left: 0.5rem;
+        transition: all 0.2s ease;
+      }
+
+      .tooltip:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+      }
+
+      .accordion-container {
+        margin-top: 2rem;
+      }
+
+      .ac-header {
+        background: var(--bg-secondary);
+        padding: 1.25rem;
+        border-radius: var(--radius);
+        cursor: pointer;
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+      }
+
+      .ac-header:hover {
+        background: var(--border-light);
+        border-color: var(--primary);
+      }
+
+      .ac-panel {
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        max-height: 0;
+      }
+
+      .ac-panel.is-open {
+        max-height: 1200px;
+        padding: 1.5rem 0;
+      }
+
+      .output {
+        text-align: center;
+      }
+
+      .output-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .output-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+
+      .rent-sell-output-text {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+        border: 1px solid #bfdbfe;
+        border-radius: var(--radius);
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      .rent-sell-chart-wrapper {
+        height: 400px;
+        margin: 2rem 0;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+
+      .rent-sell-chart-container {
+        height: 100%;
+      }
+
+      .rent-sell-data {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .rent-sell-data__card {
+        background: var(--bg);
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        text-align: center;
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+      }
+
+      .rent-sell-data__card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .rent-sell-data__card-title {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .rent-sell-data__card-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .rent-sell-table-container {
+        overflow-x: auto;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        margin-top: 2rem;
+      }
+
+      .rent-sell-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .rent-sell-table th,
+      .rent-sell-table td {
+        padding: 1rem 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+      }
+
+      .rent-sell-table th {
+        background-color: var(--bg-secondary);
+        font-weight: 600;
+        color: var(--text);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .rent-sell-table td {
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .rent-sell-table tbody tr:hover {
+        background-color: var(--bg);
+      }
+
+      .disclaimer {
+        margin-top: 3rem;
+        padding: 1.5rem;
+        background: var(--bg-secondary);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      /* Footer Styles */
+      .footer {
+        background: var(--text);
+        color: var(--card-bg);
+        margin-top: 4rem;
+      }
+
+      .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 2rem 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .footer-section h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--card-bg);
+      }
+
+      .footer-section p,
+      .footer-section a {
+        color: var(--text-muted);
+        text-decoration: none;
+        line-height: 1.6;
+        font-size: 0.9rem;
+      }
+
+      .footer-section a:hover {
+        color: var(--card-bg);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #374151;
+        padding: 1.5rem 2rem;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 1200px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+
+        .calculator-container {
+          position: static;
+          max-height: none;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .stepper-container {
+          padding: 1rem;
+        }
+
+        .hero-title {
+          font-size: 2rem;
+        }
+
+        .stepper-nav {
+          padding: 0.75rem 1rem;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+
+        .stepper-nav::before {
+          display: none;
+        }
+
+        .stepper-step {
+          padding: 0.4rem 0.75rem;
+          gap: 0.5rem;
+          flex: 1;
+          min-width: 120px;
+          max-width: none;
+        }
+
+        .stepper-step-number {
+          width: 20px;
+          height: 20px;
+          font-size: 0.7rem;
+        }
+
+        .stepper-step-title {
+          font-size: 0.75rem;
+        }
+
+        .stepper-content {
+          padding: 2rem 1.5rem;
+        }
+
+        .step-title {
+          font-size: 1.5rem;
+        }
+
+        .field-section {
+          grid-template-columns: 1fr;
+        }
+
+        .rent-sell-data {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stepper-actions {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stepper-nav {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.25rem;
+        }
+
+        .stepper-step {
+          justify-content: flex-start;
+          padding: 0.5rem;
+          max-width: none;
+        }
+
+        .rent-sell-data {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .range-with-tooltip {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+
+      .form-field-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+      }
+
+      .form-field-checkbox input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        accent-color: var(--primary);
+      }
+
+      .text-small {
+        font-size: 0.85rem;
+      }
+
+      .text-secondary {
+        color: var(--text-secondary);
+      }
+
+      .wealth {
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .rent-or-sell {
+        font-weight: 700;
+        color: var(--secondary);
+      }
+
+      canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .accordion-trigger {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        background: none;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        cursor: pointer;
+      }
+
+      .accordion-arrow {
+        transition: transform 0.3s ease;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+
+      .ac-trigger[aria-expanded="true"] .accordion-arrow {
+        transform: rotate(180deg);
+      }
+
+      .ac-panel {
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        max-height: 0;
+      }
+
+      .ac-panel.is-open {
+        max-height: 800px;
+        padding: 1.5rem 0;
+      }
+
+      /* Range Slider Styling */
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--border);
+        outline: none;
+        margin: 0.5rem 0;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        border: none;
+        box-shadow: var(--shadow);
+      }
+
+      /* Loading Animation */
+      .loading {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid var(--border);
+        border-top: 2px solid var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Smooth transitions */
+      .calculator-container,
+      .output-container,
+      .form-field-with-icon input,
+      .tooltip,
+      .ac-header {
+        transition: all 0.2s ease;
+      }
+
+      /* Focus states */
+      .form-field-with-icon input:focus {
+        transform: translateY(-1px);
+      }
+
+      /* Hover effects */
+      .rent-sell-data__card:hover {
+        border-color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Calculator Container -->
+    <div class="stepper-container">
+      <!-- Stepper Navigation -->
+      <div class="stepper-nav">
+        <div class="stepper-step active" data-step="1">
+          <div class="stepper-step-number">1</div>
+          <div class="stepper-step-title">Property Details</div>
+        </div>
+        <div class="stepper-step" data-step="2">
+          <div class="stepper-step-number">2</div>
+          <div class="stepper-step-title">Advanced Settings</div>
+        </div>
+        <div class="stepper-step" data-step="3">
+          <div class="stepper-step-number">3</div>
+          <div class="stepper-step-title">Results Analysis</div>
+        </div>
+        <div class="stepper-step" data-step="4">
+          <div class="stepper-step-number">4</div>
+          <div class="stepper-step-title">Visualization</div>
+        </div>
+      </div>
+
+      <!-- Calculator Content -->
+      <div class="stepper-content">
+
+        <!-- Step 1: Property Details -->
+        <div class="step-panel active" id="step-1">
+          <h2 class="step-title">
+            <i class="fas fa-home"></i>
+            Property Details
+          </h2>
+          <p class="step-subtitle">
+            Enter your property's core financial information to begin the analysis
+          </p>
+
+          <div class="field-section">
+            <div class="form-group home-value with-tooltip">
+              <label for="homeValue">
+                <i class="fas fa-home"></i>
+                Current Home Value
+                <span
+                  class="tooltip"
+                  title="Enter the current market value of your property today"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon">
+                <input type="text" id="homeValue" value="800,000" placeholder="Enter current value" />
+                <span class="icon">$</span>
+              </div>
+            </div>
+            <div class="form-group price-paid with-tooltip">
+              <label for="pricePaid">
+                <i class="fas fa-receipt"></i>
+                Original Purchase Price
+                <span class="tooltip" title="Original purchase price of home"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon">
+                <input type="text" id="pricePaid" value="700,000" placeholder="Enter purchase price" />
+                <span class="icon">$</span>
+              </div>
+            </div>
+            <div class="form-group original-mortgage with-tooltip">
+              <label for="originalMortgage">
+                <i class="fas fa-university"></i>
+                Original Mortgage Amount
+                <span
+                  class="tooltip"
+                  title="Enter the amount of your original mortgage loan amount"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon">
+                <input type="text" id="originalMortgage" value="560,000" placeholder="Enter original loan amount" />
+                <span class="icon">$</span>
+              </div>
+            </div>
+            <div class="form-group mortgage-balance with-tooltip">
+              <label for="mortgageBalance">
+                <i class="fas fa-balance-scale"></i>
+                Current Mortgage Balance
+                <span
+                  class="tooltip"
+                  title="Enter the current balance owed on your mortgage loan"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon">
+                <input type="text" id="mortgageBalance" value="98,000" placeholder="Enter current balance" />
+                <span class="icon">$</span>
+              </div>
+            </div>
+            <div class="form-group interest-rate with-tooltip">
+              <label for="interestRate">
+                <i class="fas fa-percentage"></i>
+                Mortgage Interest Rate
+                <span
+                  class="tooltip"
+                  title="Enter the current interest rate on your loan"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon right">
+                <input
+                  type="number"
+                  id="interestRate"
+                  value="5"
+                  step="0.1"
+                  min="0.1"
+                  max="20"
+                  placeholder="5.0"
+                />
+                <span class="icon">%</span>
+              </div>
+            </div>
+            <div class="form-group mortgage-payment with-tooltip">
+              <label for="mortgagePayment">
+                <i class="fas fa-credit-card"></i>
+                Monthly Mortgage Payment
+                <span
+                  class="tooltip"
+                  title="This amount is calculated automatically. If your actual Principal and Interest payment differs from this amount, you can manually edit the calculated value below"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon">
+                <input type="text" id="mortgagePayment" value="2,200" placeholder="Monthly P&I payment" />
+                <span class="icon">$</span>
+              </div>
+            </div>
+            <div class="form-group other-costs with-tooltip">
+              <label for="otherCosts"
+                ><i class="fas fa-file-invoice-dollar"></i>
+                Taxes, Ins, Common Charges
+                <span
+                  class="tooltip"
+                  title="Enter the annual cost of property taxes, insurance and any common charges or association dues for your property."
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon">
+                <input type="text" id="otherCosts" value="0" />
+                <span class="icon">$</span>
+              </div>
+            </div>
+            <div class="form-group monthly-rent with-tooltip">
+              <label for="monthlyRent">
+                <i class="fas fa-key"></i>
+                Expected Monthly Rent
+                <span
+                  class="tooltip"
+                  title="Enter or estimate the amount of monthly rent you can get for your property"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon">
+                <input type="text" id="monthlyRent" value="3,200" placeholder="Monthly rental income" />
+                <span class="icon">$</span>
+              </div>
+            </div>
+            <div class="form-group appreciation-rate with-tooltip">
+              <label for="appreciationRate">
+                <i class="fas fa-chart-line"></i>
+                Annual Appreciation Rate
+                <span
+                  class="tooltip"
+                  title="<p>Enter the annual appreciation rate you expect while you rent your home.<p/>
+      <p>For current forecasts, <a href='https://www.zillow.com/home-values/'  target='_blank'>see here</a></p>"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon right">
+                <input
+                  type="number"
+                  id="appreciationRate"
+                  value="5"
+                  step="0.1"
+                  min="-20"
+                  max="20"
+                  placeholder="5.0"
+                />
+                <span class="icon">%</span>
+              </div>
+            </div>
+            <div class="form-group years-to-hold with-tooltip with-range">
+              <label for="yearsToHold"
+                ><i class="fas fa-calendar-alt"></i>
+                Years to Hold
+                <span
+                  class="tooltip"
+                  title="This is your time horizon. i.e. I want to see if it's better to sell now or later, and the impact that this decision has on my wealth"
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon right">
+                <input
+                  type="number"
+                  id="yearsToHold"
+                  value="5"
+                  step="1"
+                  min="1"
+                  max="50"
+                />
+                <span class="icon">Yrs</span>
+              </div>
+              <input
+                type="range"
+                class="range-with-tooltip"
+                id="yearsToHoldRange"
+              />
+            </div>
+            <div class="form-group primary-residency-checkbox with-tooltip">
+              <div class="form-field-checkbox">
+                <input type="checkbox" id="primaryResidence" checked />
+                <label for="primaryResidence"
+                  >Primary Residence?
+                  <span
+                    class="tooltip"
+                    title="If this qualifies as your primary residence you can exclude the gain of up to $500,000 from the sale of your property from taxation."
+                    >?</span
+                  >
+                </label>
+              </div>
+              <small>(at least 2 of last 5 years)</small>
+            </div>
+          </div>
+
+          <div class="stepper-actions">
+            <button class="btn btn-secondary" id="prev-btn" disabled>
+              <i class="fas fa-arrow-left"></i>
+              Previous
+            </button>
+            <button class="btn btn-primary" id="next-btn">
+              Next
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Advanced Settings -->
+        <div class="step-panel" id="step-2">
+          <h2 class="step-title">
+            <i class="fas fa-cogs"></i>
+            Advanced Settings
+          </h2>
+          <p class="step-subtitle">
+            Fine-tune your analysis with detailed parameters for more accurate projections
+          </p>
+
+          <div class="field-section">
+                  <div class="form-group make-ready-costs with-tooltip">
+                    <label for="makeReadyCosts"
+                      >Make-Ready Costs
+                      <span
+                        class="tooltip"
+                        title="Over your holding period this is the amount of money you will have to spend to make the property ready between tenants."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon">
+                      <input type="text" id="makeReadyCosts" value="3,000" />
+                      <span class="icon">$</span>
+                    </div>
+                  </div>
+                  <div
+                    class="form-group annual-maintenance-costs with-tooltip with-range"
+                  >
+                    <label for="annualMaintenanceCosts"
+                      >Annual Maintenance Costs
+                      <span
+                        class="tooltip"
+                        title="Costs as a % of home value for repairs, upkeep, etc. 1% is a good rule of thumb."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input
+                        type="number"
+                        id="annualMaintenanceCosts"
+                        value="1"
+                        step="0.1"
+                        min="0.1"
+                        max="20"
+                      />
+                      <span class="icon">%</span>
+                    </div>
+                    <input type="range" id="annualMaintenanceCostsRange" />
+                  </div>
+                  <div
+                    class="form-group capital-improvements-renting with-tooltip"
+                  >
+                    <label for="capitalImprovementsWhileRenting"
+                      >Capital improvements while<br />renting
+                      <span
+                        class="tooltip"
+                        title="Total cost of capital improvements (i.e. roof, etc) while renting"
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon left">
+                      <input
+                        type="text"
+                        id="capitalImprovementsWhileRenting"
+                        value="0"
+                      />
+                      <span class="icon">$</span>
+                    </div>
+                  </div>
+                  <div
+                    class="form-group refurbishing-costs-prior-to-sell with-tooltip"
+                  >
+                    <label for="refurbishingCostsPriorToSell"
+                      >Refurbishing Costs to Sell Now
+                      <span
+                        class="tooltip"
+                        title="If you sell, how much would it cost to fix up the home prior to being sold."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon left">
+                      <input
+                        type="text"
+                        id="refurbishingCostsPriorToSell"
+                        value="0"
+                      />
+                      <span class="icon">$</span>
+                    </div>
+                  </div>
+                  <div class="form-group mortgage-term with-tooltip">
+                    <label for="mortgageTerm"
+                      >Mortgage Term
+                      <span
+                        class="tooltip"
+                        title="Enter the term in months of your mortgage. Most mortgages are 360 months (30 years)"
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input type="number" id="mortgageTerm" value="360" />
+                      <span class="icon">M</span>
+                    </div>
+                  </div>
+                  <div
+                    class="form-group property-management-fee with-tooltip with-range"
+                  >
+                    <label for="propertyManagementFee"
+                      >Property Management Fee
+                      <span
+                        class="tooltip"
+                        title="Enter as a % of annual rents the costs to manage your property. Professional management will insure better results in most cases."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input
+                        type="number"
+                        id="propertyManagementFee"
+                        value="8"
+                        step="0.1"
+                        min="0"
+                        max="20"
+                      />
+                      <span class="icon">%</span>
+                    </div>
+                    <input type="range" id="propertyManagementFeeRange" />
+                  </div>
+                  <div
+                    class="form-group occupancy-rate with-tooltip with-range"
+                  >
+                    <label for="occupancyRate"
+                      >Occupancy Rate
+                      <span
+                        class="tooltip"
+                        title="Properties are rarely rented out 100% of the time. Often in between rentals, time is taken to redecorate, and to look for a new tenant."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input
+                        type="number"
+                        id="occupancyRate"
+                        value="90"
+                        step="1"
+                        min="1"
+                        max="100"
+                      />
+                      <span class="icon">%</span>
+                    </div>
+                    <input type="range" id="occupancyRateRange" />
+                  </div>
+                  <div
+                    class="form-group tax-rate-rental-profit with-tooltip with-range"
+                  >
+                    <label for="taxRateRentalProfit"
+                      >Tax rate on rental "profit" (if any)
+                      <span
+                        class="tooltip"
+                        title="If you have income from the rental it will be subject to taxation at your ordinary tax rate. Losses may be deductible also."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input
+                        type="number"
+                        id="taxRateRentalProfit"
+                        value="25"
+                        step="1"
+                        min="1"
+                        max="100"
+                      />
+                      <span class="icon">%</span>
+                    </div>
+                    <input type="range" id="taxRateRentalProfitRange" />
+                  </div>
+                  <div
+                    class="form-group effective-capital-gains-tax with-tooltip with-range"
+                  >
+                    <label for="effectiveCapitalGainsTax"
+                      >Effective Capital Gains Tax
+                      <span
+                        class="tooltip"
+                        title="Any gain from sale will be taxed if property does not qualify for primary residence exclusion."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input
+                        type="number"
+                        id="effectiveCapitalGainsTax"
+                        value="15"
+                        step="1"
+                        min="1"
+                        max="100"
+                      />
+                      <span class="icon">%</span>
+                    </div>
+                    <input type="range" id="effectiveCapitalGainsTaxRange" />
+                  </div>
+                  <div class="form-group selling-costs with-tooltip with-range">
+                    <label for="sellingCosts"
+                      >Selling Costs
+                      <span
+                        class="tooltip"
+                        title="Costs such as brokerage commsion or other selling costs as % of sales price."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input
+                        type="number"
+                        id="sellingCosts"
+                        value="6"
+                        step="1"
+                        min="1"
+                        max="100"
+                      />
+                      <span class="icon">%</span>
+                    </div>
+                    <input type="range" id="sellingCostsRange" />
+                  </div>
+                  <div
+                    class="form-group after-tax-reinvestment-rate with-tooltip with-range"
+                  >
+                    <label for="afterTaxReInvestmentRate"
+                      >After tax re-investimate rate
+                      <span
+                        class="tooltip"
+                        title="If you sell, this is the anticipated rate of return on your reinvested proceeds. For example, you might invest in a government bond or use the funds to pay down debt."
+                        >?</span
+                      >
+                    </label>
+                    <div class="form-field-with-icon right">
+                      <input
+                        type="number"
+                        id="afterTaxReInvestmentRate"
+                        value="6"
+                        step="1"
+                        min="1"
+                        max="100"
+                      />
+                      <span class="icon">%</span>
+                    </div>
+                    <input type="range" id="afterTaxReInvestmentRateRange" />
+                  </div>
+            <div class="form-group annual-rent-percent-change with-tooltip with-range">
+              <label for="annualRentPercentChange">
+                <i class="fas fa-trending-up"></i>
+                Annual Change in Rents
+                <span
+                  class="tooltip"
+                  title="Expected annual rent increases."
+                  >?</span
+                >
+              </label>
+              <div class="form-field-with-icon right">
+                <input
+                  type="number"
+                  id="annualRentPercentChange"
+                  value="4"
+                  step="0.1"
+                  min="0.1"
+                  max="20"
+                />
+                <span class="icon">%</span>
+              </div>
+              <input type="range" id="annualRentPercentChangeRange" />
+            </div>
+          </div>
+
+          <div class="stepper-actions">
+            <button class="btn btn-secondary" id="prev-btn-2">
+              <i class="fas fa-arrow-left"></i>
+              Previous
+            </button>
+            <button class="btn btn-primary" id="next-btn-2">
+              Next
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Results Analysis -->
+        <div class="step-panel" id="step-3">
+          <h2 class="step-title">
+            <i class="fas fa-table"></i>
+            Detailed Financial Analysis
+          </h2>
+          <p class="step-subtitle">
+            Comprehensive year-by-year breakdown of your financial projections
+          </p>
+
+          <div class="rent-sell-table-container">
+            <table class="rent-sell-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Rental Income</th>
+                  <th>Mortgage Expense</th>
+                  <th>Other Costs</th>
+                  <th>Net Cash Flow</th>
+                  <th>House Value</th>
+                  <th>House Equity</th>
+                  <th>Wealth (Rent Out)</th>
+                  <th>Wealth (Sell Now)</th>
+                  <th>Difference in Wealth</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="disclaimer">
+            <p>
+              Disclaimer: This data is provided for informational purposes only.
+              It is not to be relied upon as a guarantee of any future result.
+              Consult a qualified professional before making any decisions.
+            </p>
+          </div>
+
+          <div class="stepper-actions">
+            <button class="btn btn-secondary" id="prev-btn-3">
+              <i class="fas fa-arrow-left"></i>
+              Previous
+            </button>
+            <button class="btn btn-primary" id="next-btn-3">
+              View Chart
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4: Visualization -->
+        <div class="step-panel" id="step-4">
+          <h2 class="step-title">
+            <i class="fas fa-chart-area"></i>
+            Interactive Visualization & Summary
+          </h2>
+          <p class="step-subtitle">
+            Visual analysis of your rent vs. sell decision with key insights
+          </p>
+
+          <h3 class="rent-sell-output-text">
+            If you <span class="rent-or-sell">RENT OUT</span> your property,
+            you'll have <span class="wealth">$21,355</span> more wealth in
+            <span class="rent-or-sell-years">5</span> years
+          </h3>
+
+          <div class="rent-sell-data">
+            <div class="rent-sell-data__card">
+              <div class="rent-sell-data__card-title">Year</div>
+              <h4 class="rent-sell-data__card-value" data-type="year">5</h4>
+            </div>
+            <div class="rent-sell-data__card">
+              <div class="rent-sell-data__card-title">Rent Out</div>
+              <h4 class="rent-sell-data__card-value" data-type="rent-out">
+                $0
+              </h4>
+            </div>
+            <div class="rent-sell-data__card">
+              <div class="rent-sell-data__card-title">Sell Now</div>
+              <h4 class="rent-sell-data__card-value" data-type="sell-now">
+                $0
+              </h4>
+            </div>
+            <div class="rent-sell-data__card">
+              <div class="rent-sell-data__card-title">Difference In Wealth</div>
+              <h4
+                class="rent-sell-data__card-value"
+                data-type="difference-in-wealth"
+              >
+                $0
+              </h4>
+            </div>
+          </div>
+
+          <div class="rent-sell-chart-wrapper">
+            <div class="rent-sell-chart-container">
+              <canvas class="rent-sell-chart"></canvas>
+            </div>
+          </div>
+
+          <p class="text-small text-center text-secondary">
+            Click on the chart to see year-by-year details
+          </p>
+
+          <div class="stepper-actions">
+            <button class="btn btn-secondary" id="prev-btn-4">
+              <i class="fas fa-arrow-left"></i>
+              Previous
+            </button>
+            <button class="btn btn-primary" id="restart-btn">
+              <i class="fas fa-redo"></i>
+              Start Over
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!-- External Scripts -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
+      integrity="sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://unpkg.com/accordion-js@3.3.4/dist/accordion.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+    <!-- Main Script -->
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        // Stepper functionality
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateStepper() {
+          // Update step navigation
+          document.querySelectorAll('.stepper-step').forEach((step, index) => {
+            const stepNumber = index + 1;
+            step.classList.remove('active', 'completed');
+
+            if (stepNumber === currentStep) {
+              step.classList.add('active');
+            } else if (stepNumber < currentStep) {
+              step.classList.add('completed');
+            }
+          });
+
+          // Update step panels
+          document.querySelectorAll('.step-panel').forEach((panel, index) => {
+            panel.classList.remove('active');
+            if (index + 1 === currentStep) {
+              panel.classList.add('active');
+            }
+          });
+
+
+
+          // Auto-calculate when entering step 3
+          if (currentStep === 3) {
+            setTimeout(() => {
+              if (typeof N === 'function') {
+                N();
+              }
+            }, 300);
+          }
+        }
+
+        function nextStep() {
+          if (currentStep < totalSteps) {
+            currentStep++;
+            updateStepper();
+          }
+        }
+
+        function prevStep() {
+          if (currentStep > 1) {
+            currentStep--;
+            updateStepper();
+          }
+        }
+
+        // Navigation event listeners
+        document.getElementById('next-btn').addEventListener('click', nextStep);
+        document.getElementById('prev-btn-2').addEventListener('click', prevStep);
+        document.getElementById('next-btn-2').addEventListener('click', nextStep);
+        document.getElementById('prev-btn-3').addEventListener('click', prevStep);
+        document.getElementById('next-btn-3').addEventListener('click', nextStep);
+        document.getElementById('prev-btn-4').addEventListener('click', prevStep);
+        document.getElementById('restart-btn').addEventListener('click', () => {
+          currentStep = 1;
+          updateStepper();
+        });
+
+        // Step navigation clicks
+        document.querySelectorAll('.stepper-step').forEach((step, index) => {
+          step.addEventListener('click', () => {
+            currentStep = index + 1;
+            updateStepper();
+          });
+        });
+
+        // Initialize stepper
+        updateStepper();
+
+        // Initial calculation to populate data
+        setTimeout(() => {
+          console.log('Running initial calculation...');
+          if (typeof _ === 'function') {
+            _();
+          }
+          if (typeof N === 'function') {
+            N();
+          }
+        }, 500);
+
+        const e = {
+            homeValue: 8e5,
+            pricePaidForHouse: 7e5,
+            originalMortgage: 56e4,
+            mortgageBalance: 98e3,
+            interestRate: 0.05,
+            mortgagePayment: 679,
+            otherCosts: 2e3,
+            monthlyRent: 3200,
+            appreciationRate: 0.05,
+            yearsToHold: 5,
+            isPrimaryResidence: !0,
+            makeReadyCosts: 1e4,
+            annualMaintenanceCosts: 0.01,
+            capitalImprovementsWhileRenting: 0,
+            refurbishingCostsPriorToSell: 0,
+            mortgageTermMonths: 360,
+            transferCosts: 0.01,
+            prepaymentPenalty: 0,
+            propertyManagementFee: 0.08,
+            occupancyRate: 0.9,
+            taxRateRentalProfit: 0.25,
+            capitalGainsTaxRate: 0.15,
+            costOfSelling: 0.06,
+            afterTaxReInvestmentRate: 0.06,
+            annualChangeInRent: 0.04,
+          },
+          t = {
+            rentSellData: [],
+          };
+        const n = Intl.NumberFormat("en-US", {
+          style: "decimal",
+          maximumFractionDigits: 0,
+        });
+        class o {
+          isMouseDown = !1;
+          constructor() {
+            document.addEventListener("mousedown", this.#e.bind(this)),
+              document.addEventListener("mouseup", this.#t.bind(this)),
+              document.addEventListener("touchstart", this.#e.bind(this)),
+              document.addEventListener("touchend", this.#t.bind(this));
+          }
+          #e(e) {
+            this.isMouseDown = !0;
+          }
+          #t() {
+            this.isMouseDown = !1;
+          }
+        }
+
+        function a(e, t = 0, n = 1) {
+          return Math.max(t, Math.min(e, n));
+        }
+        !(function () {
+          const r = document.querySelector(".home-value input"),
+            i = document.querySelector(".price-paid input"),
+            l = document.querySelector(".original-mortgage input"),
+            s = document.querySelector(".mortgage-balance input"),
+            u = document.querySelector(".interest-rate input"),
+            c = document.querySelector(".mortgage-payment input"),
+            p = document.querySelector(".other-costs input"),
+            d = document.querySelector(".monthly-rent input"),
+            m = document.querySelector(".appreciation-rate input"),
+            y = document.querySelector(".years-to-hold input"),
+            h = document.querySelector(".primary-residency-checkbox input"),
+            g = document.querySelector(".make-ready-costs input"),
+            f = document.querySelector(".annual-maintenance-costs input"),
+            v = document.querySelector(".capital-improvements-renting input"),
+            w = document.querySelector(
+              ".refurbishing-costs-prior-to-sell input"
+            ),
+            b = document.querySelector(".mortgage-term input"),
+            x = document.querySelector(".property-management-fee input"),
+            S = document.querySelector(".occupancy-rate input"),
+            E = document.querySelector(".tax-rate-rental-profit input"),
+            R = document.querySelector(".effective-capital-gains-tax input"),
+            C = document.querySelector(".selling-costs input"),
+            L = document.querySelector(".after-tax-reinvestment-rate input"),
+            M = document.querySelector(".annual-rent-percent-change input"),
+            I = document.querySelector(".rent-or-sell"),
+            P = document.querySelector(".rent-or-sell-years"),
+            T = document.querySelector(".wealth"),
+            k = document.querySelector(".rent-sell-table tbody");
+          let D,
+            F = 2;
+          const $ = new o();
+          r.addEventListener("input", H),
+            i.addEventListener("input", H),
+            l.addEventListener("input", (e) => {
+              _(), H(e);
+            }),
+            s.addEventListener("input", H),
+            u.addEventListener("input", (e) => {
+              _(), N();
+            }),
+            c.addEventListener("input", H),
+            d.addEventListener("input", H),
+            m.addEventListener("input", N),
+            y.addEventListener("input", N),
+            h.addEventListener("input", N),
+            g.addEventListener("input", H),
+            f.addEventListener("input", N),
+            v.addEventListener("input", H),
+            w.addEventListener("input", H),
+            b.addEventListener("input", N),
+            x.addEventListener("input", N),
+            S.addEventListener("input", N),
+            E.addEventListener("input", N),
+            R.addEventListener("input", N),
+            C.addEventListener("input", N),
+            L.addEventListener("input", N),
+            M.addEventListener("input", N),
+            p.addEventListener("input", H),
+            document
+              .querySelectorAll(".with-range")
+              .forEach(W);
+          const A = Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }),
+            O = Intl.NumberFormat("en-US", {
+              style: "decimal",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            });
+
+          function _() {
+            const e =
+              ((t = B(u.value) / 100 / 12),
+              (n = B(b.value)),
+              (o = B(l.value)),
+              (-t * o * Math.pow(1 + t, n)) / (1 - Math.pow(1 + t, n)));
+            var t, n, o;
+            c.value = U(e.toFixed(0));
+          }
+
+          function H(e) {
+            (e.target.value = U(e.target.value)), N();
+          }
+
+          function U(e) {
+            let t;
+            return (t = "" === e ? "0" : O.format(B(e))), t;
+          }
+
+          function W(e) {
+            const t = e.querySelector("input:not([type=range])"),
+              n = e.querySelector("input[type='range']");
+
+            function o() {
+              const e = B(t.min),
+                o = B(t.max),
+                a = B(t.value);
+
+              // Calculate percentage for fill effect
+              const percentage = ((a - e) / (o - e)) * 100;
+
+              // Set CSS custom property for fill effect
+              n.style.setProperty("--slider-progress", `${percentage}%`);
+              n.style.setProperty("--slider-value", JSON.stringify(n.value));
+            }
+            n &&
+              ((n.value = t.value),
+              n.setAttribute("min", t.min),
+              n.setAttribute("max", t.max),
+              n.setAttribute("step", t.step),
+              o(),
+              n.addEventListener("input", (e) => {
+                !(function (e, t) {
+                  const n = e.target.value;
+                  (e.target.value = n),
+                    (t.value = n),
+                    t.dispatchEvent(new Event("input"));
+                })(e, t),
+                  o();
+              }),
+              t.addEventListener("input", (e) => {
+                (n.value = e.target.value), o();
+              }));
+          }
+
+          function B(e) {
+            return Number(e.replace(/[^0-9.-]/g, ""));
+          }
+
+          function N() {
+            const n = B(r.value),
+              o = B(i.value),
+              q = B(l.value),
+              k = B(s.value),
+              O = B(u.value) / 100,
+              _ = B(d.value),
+              H = B(m.value) / 100,
+              U = B(y.value),
+              W = B(g.value),
+              N = B(v.value),
+              G = B(w.value),
+              j = B(b.value),
+              Y = B(x.value) / 100,
+              J = B(S.value) / 100,
+              K = B(E.value) / 100,
+              Q = B(R.value) / 100,
+              X = B(C.value) / 100,
+              Z = B(M.value) / 100,
+              ee = B(f.value) / 100,
+              te = B(L.value) / 100,
+              ne = h.checked,
+              oe = B(c.value),
+              ae = B(p.value),
+              re = (function (t) {
+                const n = {
+                    ...e,
+                    ...t,
+                  },
+                  {
+                    homeValue: o,
+                    monthlyRent: a,
+                    pricePaidForHouse: r,
+                    originalMortgage: i,
+                    mortgageBalance: l,
+                    mortgagePayment: s,
+                    interestRate: u,
+                    otherCosts: c,
+                    appreciationRate: p,
+                    yearsToHold: d,
+                    isPrimaryResidence: m,
+                    makeReadyCosts: y,
+                    capitalImprovementsWhileRenting: h,
+                    refurbishingCostsPriorToSell: g,
+                    mortgageTermMonths: f,
+                    transferCosts: v,
+                    prepaymentPenalty: w,
+                    propertyManagementFee: b,
+                    occupancyRate: x,
+                    taxRateRentalProfit: S,
+                    capitalGainsTaxRate: E,
+                    costOfSelling: R,
+                    afterTaxReInvestmentRate: C,
+                    annualMaintenanceCosts: L,
+                    annualChangeInRent: M,
+                  } = n;
+                let q = E;
+                const I = -12 * s,
+                  P = l - (-1 * I + -1 * l * u);
+                let T = o - o * (v + R) - w * P - l;
+                if ((m || (T *= 1 - q), m && d < 5)) {
+                  let e = 5e5;
+                  (T =
+                    o -
+                    Math.max(o - r - y - (v + R) * o - e, 0) * q -
+                    l -
+                    w * P),
+                    (q = 0);
+                }
+                const k = [];
+                for (let e = 0; e < d; e++) {
+                  const t = o * Math.pow(1 + p, e);
+                  let n, i, m, f, w;
+                  0 === e
+                    ? ((m = -1 * l * u),
+                      (f = -1 * I + m),
+                      (i = l - f),
+                      (w = t - l + f),
+                      (n = 12 * a * x * (1 - b)))
+                    : ((n = k[e - 1].rentalIncome * (1 + M)),
+                      (m = -1 * k[e - 1].endMortgageBalance * u),
+                      (f = -1 * I + m),
+                      (i = k[e - 1].endMortgageBalance - f),
+                      (w = t - i));
+                  let E = n + m,
+                    P = 0,
+                    D = 0;
+                  e + 1 === d &&
+                    ((P = t * (R + v)),
+                    t > r && (D = (t - r - y - (R + v) * t) * q));
+                  let F =
+                    -((E > 0 ? S * E : 0) + (12 * s + I) + L * t - 0) -
+                    c -
+                    (P + D);
+                  0 === e && (F -= h);
+                  const $ = Math.round(F),
+                    A = n + I + $;
+                  let O;
+                  O = 0 === e ? A : k[e - 1].cashPosition * (1 + C) + A;
+                  const _ = O + w;
+                  let H;
+                  H = 0 === e ? T : k[e - 1].wealth.sell * (1 + C);
+                  let U = 0.075;
+                  0 !== e && (U = Math.min(U + 0.075 * (e + 1), 0.75)),
+                    e === d - 1 && (H += g - g * U),
+                    k.push({
+                      year: e + 1,
+                      rentalIncome: n,
+                      mortgageExpense: I,
+                      cashPosition: O,
+                      netCashFlow: A,
+                      houseValue: t,
+                      houseEquity: w,
+                      wealth: {
+                        rent: _,
+                        sell: H,
+                      },
+                      otherCosts: $,
+                      differenceInWealth: _ - H,
+                      endMortgageBalance: i,
+                      interest: m,
+                      principal: f,
+                      refurbishingDepricationRate: U,
+                      yearlyCashPosition: O,
+                      refurbishingCostsPriorToSell: g,
+                      refurbishingDepricationRate: U,
+                    });
+                }
+                return k;
+              })({
+                appreciationRate: H,
+                homeValue: n,
+                pricePaidForHouse: o,
+                originalMortgage: q,
+                mortgageBalance: k,
+                interestRate: O,
+                monthlyRent: _,
+                yearsToHold: U,
+                annualChangeInRent: Z,
+                costOfSelling: X,
+                mortgageTermMonths: j,
+                propertyManagementFee: Y,
+                taxRateRentalProfit: K,
+                makeReadyCosts: W,
+                capitalImprovementsWhileRenting: N,
+                refurbishingCostsPriorToSell: G,
+                transferCosts: e.transferCosts,
+                prepaymentPenalty: e.prepaymentPenalty,
+                occupancyRate: J,
+                capitalGainsTaxRate: Q,
+                annualMaintenanceCosts: ee,
+                afterTaxReInvestmentRate: te,
+                isPrimaryResidence: ne,
+                mortgagePayment: oe,
+                otherCosts: ae,
+              });
+            !(function (e) {
+              (function (e) {
+                const t = e[e.length - 1].differenceInWealth,
+                  n = e[e.length - 1].year;
+                t > 0
+                  ? ((I.textContent = "RENT OUT"), (P.textContent = n))
+                  : ((I.textContent = "IMMEDIATLY SELL"), (P.textContent = n));
+                T.textContent = A.format(Math.abs(t));
+              })(e),
+                (function (e) {
+                  D ||
+                    (function (e) {
+                      const n = document.querySelector(".rent-sell-chart"),
+                        o = {
+                          id: "corsair",
+                          defaults: {
+                            width: 1,
+                            color: "#8b8b8b",
+                            dash: [3, 3],
+                          },
+                          afterInit: (e, t, n) => {
+                            e.corsair = {
+                              x: 0,
+                              y: 0,
+                            };
+                          },
+                          afterEvent: (e, t) => {
+                            if (!$.isMouseDown && "click" !== t.event.type)
+                              return;
+                            const { x: n, y: o } = t.event;
+                            (e.corsair = {
+                              ...e.corsair,
+                              x: a(n, e.chartArea.left, e.chartArea.right),
+                              y: o,
+                            }),
+                              e.draw();
+                          },
+                          beforeDatasetsDraw: (e, t, n) => {
+                            const { ctx: o } = e,
+                              {
+                                top: a,
+                                bottom: r,
+                                left: i,
+                                right: l,
+                              } = e.chartArea,
+                              { x: s, y: u, draw: c } = e.corsair;
+                            o.save(),
+                              o.beginPath(),
+                              (o.lineWidth = n.width),
+                              (o.strokeStyle = n.color),
+                              o.setLineDash(n.dash),
+                              o.moveTo(s, a),
+                              o.lineTo(s, r),
+                              o.stroke(),
+                              o.beginPath(),
+                              o.arc(s, r, 8, 0, 2 * Math.PI),
+                              o.setLineDash([]),
+                              o.stroke(),
+                              (o.fillStyle = "white"),
+                              o.fill(),
+                              o.restore();
+                          },
+                        },
+                        r = {
+                          beforeInit(e) {
+                            const t = e.legend.fit;
+                            e.legend.fit = function () {
+                              t.bind(e.legend)(), (this.height += 25);
+                            };
+                          },
+                        };
+                      (D = new Chart(n, {
+                        type: "line",
+                        maintainAspectRatio: !1,
+                        data: {
+                          labels: e.map((e) => `Year ${e.year}`),
+                          datasets: [
+                            {
+                              label: "Rent",
+                              data: e.map((e) => e.wealth.rent),
+                              borderColor: "#2563eb",
+                              backgroundColor: "#2563eb",
+                              fill: !1,
+                              tension: 0.1,
+                            },
+                            {
+                              label: "Sell",
+                              data: e.map((e) => e.wealth.sell),
+                              borderColor: "#dc2626",
+                              backgroundColor: "#dc2626",
+                              fill: !1,
+                              tension: 0.1,
+                            },
+                          ],
+                        },
+                        plugins: [o, r],
+                        options: {
+                          scales: {
+                            x: {
+                              grid: {
+                                display: !1,
+                              },
+                              border: {
+                                width: 1,
+                                color: "#7e7e7e",
+                              },
+                              ticks: {
+                                maxTicksLimit: 5,
+                              },
+                            },
+                            y: {
+                              grid: {
+                                display: !1,
+                              },
+                              border: {
+                                width: 1,
+                                color: "#7e7e7e",
+                              },
+                              ticks: {
+                                maxTicksLimit: 8,
+                              },
+                            },
+                          },
+                          elements: {
+                            point: {
+                              radius: 0,
+                              hoverRadius: 0,
+                            },
+                          },
+                          interaction: {
+                            mode: "index",
+                            intersect: !1,
+                          },
+                          plugins: {
+                            legend: {
+                              position: "top",
+                              align: "start",
+                            },
+                            tooltip: {
+                              enabled: !1,
+                              position: "nearest",
+                            },
+                          },
+                        },
+                      })),
+                        n.addEventListener("click", (e) => {
+                          (F = parseInt(D.tooltip.title[0]) - 1),
+                            V(t.rentSellData);
+                        });
+                    })(e);
+                  (D.data.labels = e.map((e) => `${e.year}`)),
+                    (D.data.datasets[0].data = e.map((e) => e.wealth.rent)),
+                    (D.data.datasets[1].data = e.map((e) => e.wealth.sell)),
+                    (D.options.plugins.tooltip.external = () => {
+                      $.isMouseDown &&
+                        ((F = parseInt(D.tooltip.title[0]) - 1), V(e));
+                    }),
+                    F > e.length - 1 && (F = e.length - 1);
+                  const n = D.chartArea.left,
+                    o = D.chartArea.width,
+                    r = F / (e.length - 1),
+                    i = n + o * r;
+                  (D.corsair = {
+                    x: i,
+                    y: 0,
+                  }),
+                    D.update(),
+                    D.resize();
+                })(e),
+                z(e[0]),
+                V(e),
+                (t.rentSellData = e);
+            })(re);
+          }
+
+          function V(e) {
+            const t = e[F].year;
+            z(e.filter((e) => e.year === t)[0]),
+              (function (e) {
+                if (!k) {
+                  console.error('Table tbody not found!');
+                  return;
+                }
+                k.innerHTML = e
+                  .map(
+                    (e) =>
+                      `<tr>\n                <td>${A.format(
+                        e.year
+                      )}</td>\n                <td>${A.format(
+                        e.rentalIncome
+                      )}</td>\n                <td>${A.format(
+                        e.mortgageExpense
+                      )}</td>\n                <td>${A.format(
+                        e.otherCosts
+                      )}</td>\n                <td>${A.format(
+                        e.netCashFlow
+                      )}</td>\n                <td>${A.format(
+                        e.houseValue
+                      )}</td>\n                <td>${A.format(
+                        e.houseEquity
+                      )}</td>\n                <td>${A.format(
+                        e.wealth.rent
+                      )}</td>\n                <td>${A.format(
+                        e.wealth.sell
+                      )}</td>\n                <td>${A.format(
+                        e.differenceInWealth
+                      )}</td>\n            </tr>`
+                  )
+                  .join("");
+              })(e);
+          }
+
+          function z(e) {
+            const t = document.querySelector(
+                ".rent-sell-data__card-value[data-type=year]"
+              ),
+              n = document.querySelector(
+                ".rent-sell-data__card-value[data-type=rent-out]"
+              ),
+              o = document.querySelector(
+                ".rent-sell-data__card-value[data-type=sell-now]"
+              ),
+              a = document.querySelector(
+                ".rent-sell-data__card-value[data-type=difference-in-wealth]"
+              );
+
+            // Update the cards
+            (t.textContent = e.year),
+              (n.textContent = A.format(e.wealth.rent)),
+              (o.textContent = A.format(e.wealth.sell)),
+              (a.textContent = A.format(e.differenceInWealth));
+
+            // Update the main message interactively
+            const differenceInWealth = e.differenceInWealth;
+            const year = e.year;
+
+            if (differenceInWealth > 0) {
+              I.textContent = "RENT OUT";
+            } else {
+              I.textContent = "SELL NOW";
+            }
+            P.textContent = year;
+            T.textContent = A.format(Math.abs(differenceInWealth));
+          }
+          _(), N();
+        })(),
+          tippy(".home-value .tooltip", {
+            content: "Enter the value of your property today",
+          }),
+          tippy(".price-paid .tooltip", {
+            content: "Original purchase price of home",
+          }),
+          tippy(".original-mortgage .tooltip", {
+            content: "Enter the amount of your original mortgage loan amount",
+          }),
+          tippy(".mortgage-balance .tooltip", {
+            content: "Enter the current balance owed on your mortgage loan",
+          }),
+          tippy(".interest-rate .tooltip", {
+            content: "Enter the current interest rate on your loan",
+          }),
+          tippy(".mortgage-payment .tooltip", {
+            content:
+              "This amount is calculated automatically. If your actual Principal and Interest payment differs from this amount, you can manually edit the calculated value below",
+          }),
+          tippy(".other-costs .tooltip", {
+            content:
+              "Enter the annual cost of property taxes, insurance and any common charges or association dues for your property.",
+          }),
+          tippy(".monthly-rent .tooltip", {
+            content:
+              "Enter or estimate the amount of monthly rent you can get for your property",
+          }),
+          tippy(".appreciation-rate .tooltip", {
+            content:
+              '<p>Enter the annual appreciation rate you expect while you rent your home.<p/>\n    <p>For current forecasts, <a href="https://www.zillow.com/home-values/" rel="noopener noreferrer" target="_blank">see here</a></p>',
+            allowHTML: !0,
+            interactive: !0,
+          }),
+          tippy(".years-to-hold .tooltip", {
+            content:
+              "This is your time horizon. i.e. I want to see if it's better to sell now or later, and the impact that this decision has on my wealth",
+          }),
+          tippy(".primary-residency-checkbox .tooltip", {
+            content:
+              "If this qualifies as your primary residence you can exclude the gain of up to $500,000 from the sale of your property from taxation.",
+          }),
+          tippy(".make-ready-costs .tooltip", {
+            content:
+              "Over your holding period this is the amount of money you will have to spend to make the property ready between tenants.",
+          }),
+          tippy(".annual-maintenance-costs .tooltip", {
+            content:
+              "Costs as a % of home value for repairs, upkeep, etc. 1% is a good rule of thumb.",
+          }),
+          tippy(".capital-improvements-renting .tooltip", {
+            content:
+              "Total cost of capital improvements (i.e. roof, etc) while renting",
+          }),
+          tippy(".refurbishing-costs-prior-to-sell .tooltip", {
+            content:
+              "If you sell, how much would it cost to fix up the home prior to being sold.",
+          }),
+          tippy(".mortgage-term .tooltip", {
+            content:
+              "Enter the term in months of your mortgage. Most mortgages are 360 months (30 years)",
+          }),
+          tippy(".property-management-fee .tooltip", {
+            content:
+              "Enter as a % of annual rents the costs to manage your property. Professional management will insure better results in most cases.",
+          }),
+          tippy(".occupancy-rate .tooltip", {
+            content:
+              "Properties are rarely rented out 100% of the time. Often in between rentals, time is taken to redecorate, and to look for a new tenant.",
+          }),
+          tippy(".tax-rate-rental-profit .tooltip", {
+            content:
+              "If you have income from the rental it will be subject to taxation at your ordinary tax rate. Losses may be deductible also.",
+          }),
+          tippy(".effective-capital-gains-tax .tooltip", {
+            content:
+              "Any gain from sale will be taxed if property does not qualify for primary residence exclusion.",
+          }),
+          tippy(".selling-costs .tooltip", {
+            content:
+              "Costs such as brokerage commsion or other selling costs as % of sales price.",
+          }),
+          tippy(".after-tax-reinvestment-rate .tooltip", {
+            content:
+              "If you sell, this is the anticipated rate of return on your reinvested proceeds. For example, you might invest in a government bond or use the funds to pay down debt.",
+          }),
+          tippy(".annual-rent-percent-change .tooltip", {
+            content: "Expected annual rent increases.",
+          });
+      });
+    </script>
+  </body>
+</html>
+
