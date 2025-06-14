@@ -44,22 +44,25 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1.5rem;
-        background: var(--card-bg);
-        padding: 1rem 1.5rem;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+        background: var(--bg-secondary);
+        padding: 1rem 2rem;
         border: 1px solid var(--border);
         position: relative;
-        width: 100%;
+        width: calc(100% + 5rem);
+        margin-left: -2.5rem;
+        margin-right: -2.5rem;
+        margin-top: -2.5rem;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        border-bottom: none;
       }
 
       .stepper-nav::before {
         content: '';
         position: absolute;
         top: 50%;
-        left: 1.5rem;
-        right: 1.5rem;
+        left: 2rem;
+        right: 2rem;
         height: 1px;
         background: var(--border);
         z-index: 1;
@@ -135,10 +138,11 @@
 
       .stepper-content {
         background: var(--card-bg);
-        border-radius: var(--radius-lg);
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
         padding: 2.5rem;
         box-shadow: var(--shadow-lg);
         border: 1px solid var(--border);
+        border-top: none;
         min-height: 600px;
         position: relative;
         margin-top: 0;
@@ -237,100 +241,31 @@
       /* Enhanced form styling for stepper */
       .field-section {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
         margin-bottom: 2rem;
       }
 
-      /* Hidden Range Slider - Keep Logic, Hide Visually */
-      .with-range {
-        position: relative;
-        margin-top: 1rem;
+      /* Make last item span full width if it's alone */
+      .field-section .form-group:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
       }
 
-      .with-range input[type="range"] {
-        display: none; /* Hide the slider completely */
-        width: 100%;
-        height: 6px;
-        -webkit-appearance: none;
-        appearance: none;
-        background: var(--border);
-        border-radius: 3px;
-        outline: none;
-        cursor: pointer;
-        position: relative;
-        z-index: 2;
+      /* Ensure consistent form group alignment */
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        align-self: start;
       }
 
-      /* Webkit Slider Thumb */
-      .with-range input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--primary);
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s ease;
-        border: 2px solid white;
+      .form-group label {
+        min-height: 3rem;
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
       }
 
-      .with-range input[type="range"]::-webkit-slider-thumb:hover {
-        background: var(--primary-dark);
-        transform: scale(1.1);
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-      }
 
-      /* Firefox Slider */
-      .with-range input[type="range"]::-moz-range-track {
-        width: 100%;
-        height: 6px;
-        background: var(--border);
-        border-radius: 3px;
-        border: none;
-      }
-
-      .with-range input[type="range"]::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--primary);
-        cursor: pointer;
-        border: 2px solid white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s ease;
-      }
-
-      .with-range input[type="range"]::-moz-range-thumb:hover {
-        background: var(--primary-dark);
-        transform: scale(1.1);
-      }
-
-      /* Fill Effect - Hidden */
-      .with-range::before {
-        display: none; /* Hide the fill effect */
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 6px;
-        background: var(--primary);
-        border-radius: 3px;
-        width: var(--slider-progress, 0%);
-        pointer-events: none;
-        transition: width 0.15s ease;
-        z-index: 1;
-      }
-
-      /* Hover Effects */
-      .with-range:hover input[type="range"] {
-        background: var(--border-light);
-      }
-
-      .with-range:hover::before {
-        background: var(--primary-dark);
-      }
 
       /* Loading state for calculations */
       .calculating {
@@ -492,12 +427,7 @@
         font-size: 0.95rem;
       }
 
-      .field-section {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-      }
+
 
       .form-group {
         position: relative;
@@ -800,9 +730,13 @@
         }
 
         .stepper-nav {
-          padding: 0.75rem 1rem;
+          padding: 0.75rem 1.5rem;
           flex-wrap: wrap;
           gap: 0.5rem;
+          width: calc(100% + 5rem);
+          margin-left: -2.5rem;
+          margin-right: -2.5rem;
+          margin-top: -2.5rem;
         }
 
         .stepper-nav::before {
@@ -839,6 +773,11 @@
           grid-template-columns: 1fr;
         }
 
+        /* Reset full-width rule on mobile */
+        .field-section .form-group:last-child:nth-child(odd) {
+          grid-column: 1;
+        }
+
         .rent-sell-data {
           grid-template-columns: repeat(2, 1fr);
         }
@@ -859,6 +798,11 @@
           flex-direction: column;
           align-items: stretch;
           gap: 0.25rem;
+          width: calc(100% + 5rem);
+          margin-left: -2.5rem;
+          margin-right: -2.5rem;
+          margin-top: -2.5rem;
+          padding: 1rem 1.5rem;
         }
 
         .stepper-step {
@@ -950,38 +894,7 @@
         padding: 1.5rem 0;
       }
 
-      /* Range Slider Styling */
-      input[type="range"] {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 3px;
-        background: var(--border);
-        outline: none;
-        margin: 0.5rem 0;
-      }
 
-      input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--primary);
-        cursor: pointer;
-        box-shadow: var(--shadow);
-      }
-
-      input[type="range"]::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--primary);
-        cursor: pointer;
-        border: none;
-        box-shadow: var(--shadow);
-      }
 
       /* Loading Animation */
       .loading {
@@ -1029,30 +942,28 @@
     </style>
   </head>
   <body>
-    <!-- Main Calculator Container -->
+    <!-- Unified Calculator Container -->
     <div class="stepper-container">
-      <!-- Stepper Navigation -->
-      <div class="stepper-nav">
-        <div class="stepper-step active" data-step="1">
-          <div class="stepper-step-number">1</div>
-          <div class="stepper-step-title">Property Details</div>
-        </div>
-        <div class="stepper-step" data-step="2">
-          <div class="stepper-step-number">2</div>
-          <div class="stepper-step-title">Advanced Settings</div>
-        </div>
-        <div class="stepper-step" data-step="3">
-          <div class="stepper-step-number">3</div>
-          <div class="stepper-step-title">Results Analysis</div>
-        </div>
-        <div class="stepper-step" data-step="4">
-          <div class="stepper-step-number">4</div>
-          <div class="stepper-step-title">Visualization</div>
-        </div>
-      </div>
-
-      <!-- Calculator Content -->
       <div class="stepper-content">
+        <!-- Stepper Navigation -->
+        <div class="stepper-nav">
+          <div class="stepper-step active" data-step="1">
+            <div class="stepper-step-number">1</div>
+            <div class="stepper-step-title">Property Details</div>
+          </div>
+          <div class="stepper-step" data-step="2">
+            <div class="stepper-step-number">2</div>
+            <div class="stepper-step-title">Advanced Settings</div>
+          </div>
+          <div class="stepper-step" data-step="3">
+            <div class="stepper-step-number">3</div>
+            <div class="stepper-step-title">Results Analysis</div>
+          </div>
+          <div class="stepper-step" data-step="4">
+            <div class="stepper-step-number">4</div>
+            <div class="stepper-step-title">Visualization</div>
+          </div>
+        </div>
 
         <!-- Step 1: Property Details -->
         <div class="step-panel active" id="step-1">
@@ -1215,7 +1126,7 @@
                 <span class="icon">%</span>
               </div>
             </div>
-            <div class="form-group years-to-hold with-tooltip with-range">
+            <div class="form-group years-to-hold with-tooltip">
               <label for="yearsToHold"
                 ><i class="fas fa-calendar-alt"></i>
                 Years to Hold
@@ -1236,11 +1147,6 @@
                 />
                 <span class="icon">Yrs</span>
               </div>
-              <input
-                type="range"
-                class="range-with-tooltip"
-                id="yearsToHoldRange"
-              />
             </div>
             <div class="form-group primary-residency-checkbox with-tooltip">
               <div class="form-field-checkbox">
@@ -1296,7 +1202,7 @@
                     </div>
                   </div>
                   <div
-                    class="form-group annual-maintenance-costs with-tooltip with-range"
+                    class="form-group annual-maintenance-costs with-tooltip"
                   >
                     <label for="annualMaintenanceCosts"
                       >Annual Maintenance Costs
@@ -1317,7 +1223,6 @@
                       />
                       <span class="icon">%</span>
                     </div>
-                    <input type="range" id="annualMaintenanceCostsRange" />
                   </div>
                   <div
                     class="form-group capital-improvements-renting with-tooltip"
@@ -1374,7 +1279,7 @@
                     </div>
                   </div>
                   <div
-                    class="form-group property-management-fee with-tooltip with-range"
+                    class="form-group property-management-fee with-tooltip"
                   >
                     <label for="propertyManagementFee"
                       >Property Management Fee
@@ -1395,10 +1300,9 @@
                       />
                       <span class="icon">%</span>
                     </div>
-                    <input type="range" id="propertyManagementFeeRange" />
                   </div>
                   <div
-                    class="form-group occupancy-rate with-tooltip with-range"
+                    class="form-group occupancy-rate with-tooltip"
                   >
                     <label for="occupancyRate"
                       >Occupancy Rate
@@ -1419,10 +1323,9 @@
                       />
                       <span class="icon">%</span>
                     </div>
-                    <input type="range" id="occupancyRateRange" />
                   </div>
                   <div
-                    class="form-group tax-rate-rental-profit with-tooltip with-range"
+                    class="form-group tax-rate-rental-profit with-tooltip"
                   >
                     <label for="taxRateRentalProfit"
                       >Tax rate on rental "profit" (if any)
@@ -1443,10 +1346,9 @@
                       />
                       <span class="icon">%</span>
                     </div>
-                    <input type="range" id="taxRateRentalProfitRange" />
                   </div>
                   <div
-                    class="form-group effective-capital-gains-tax with-tooltip with-range"
+                    class="form-group effective-capital-gains-tax with-tooltip"
                   >
                     <label for="effectiveCapitalGainsTax"
                       >Effective Capital Gains Tax
@@ -1467,9 +1369,8 @@
                       />
                       <span class="icon">%</span>
                     </div>
-                    <input type="range" id="effectiveCapitalGainsTaxRange" />
                   </div>
-                  <div class="form-group selling-costs with-tooltip with-range">
+                  <div class="form-group selling-costs with-tooltip">
                     <label for="sellingCosts"
                       >Selling Costs
                       <span
@@ -1489,10 +1390,9 @@
                       />
                       <span class="icon">%</span>
                     </div>
-                    <input type="range" id="sellingCostsRange" />
                   </div>
                   <div
-                    class="form-group after-tax-reinvestment-rate with-tooltip with-range"
+                    class="form-group after-tax-reinvestment-rate with-tooltip"
                   >
                     <label for="afterTaxReInvestmentRate"
                       >After tax re-investimate rate
@@ -1513,9 +1413,8 @@
                       />
                       <span class="icon">%</span>
                     </div>
-                    <input type="range" id="afterTaxReInvestmentRateRange" />
                   </div>
-            <div class="form-group annual-rent-percent-change with-tooltip with-range">
+            <div class="form-group annual-rent-percent-change with-tooltip">
               <label for="annualRentPercentChange">
                 <i class="fas fa-trending-up"></i>
                 Annual Change in Rents
@@ -1536,7 +1435,6 @@
                 />
                 <span class="icon">%</span>
               </div>
-              <input type="range" id="annualRentPercentChangeRange" />
             </div>
           </div>
 
@@ -1884,10 +1782,8 @@
             C.addEventListener("input", N),
             L.addEventListener("input", N),
             M.addEventListener("input", N),
-            p.addEventListener("input", H),
-            document
-              .querySelectorAll(".with-range")
-              .forEach(W);
+            p.addEventListener("input", H);
+
           const A = Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
@@ -1919,41 +1815,7 @@
             return (t = "" === e ? "0" : O.format(B(e))), t;
           }
 
-          function W(e) {
-            const t = e.querySelector("input:not([type=range])"),
-              n = e.querySelector("input[type='range']");
 
-            function o() {
-              const e = B(t.min),
-                o = B(t.max),
-                a = B(t.value);
-
-              // Calculate percentage for fill effect
-              const percentage = ((a - e) / (o - e)) * 100;
-
-              // Set CSS custom property for fill effect
-              n.style.setProperty("--slider-progress", `${percentage}%`);
-              n.style.setProperty("--slider-value", JSON.stringify(n.value));
-            }
-            n &&
-              ((n.value = t.value),
-              n.setAttribute("min", t.min),
-              n.setAttribute("max", t.max),
-              n.setAttribute("step", t.step),
-              o(),
-              n.addEventListener("input", (e) => {
-                !(function (e, t) {
-                  const n = e.target.value;
-                  (e.target.value = n),
-                    (t.value = n),
-                    t.dispatchEvent(new Event("input"));
-                })(e, t),
-                  o();
-              }),
-              t.addEventListener("input", (e) => {
-                (n.value = e.target.value), o();
-              }));
-          }
 
           function B(e) {
             return Number(e.replace(/[^0-9.-]/g, ""));
