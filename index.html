@@ -570,17 +570,23 @@
       }
 
       .rent-sell-chart-wrapper {
-        height: 400px;
+        height: 500px;
         margin: 2rem 0;
         background: var(--card-bg);
-        border-radius: var(--radius);
-        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        padding: 2rem;
         border: 1px solid var(--border);
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-lg);
+        position: relative;
       }
 
       .rent-sell-chart-container {
         height: 100%;
+        position: relative;
+      }
+
+      .rent-sell-chart {
+        border-radius: var(--radius);
       }
 
       .rent-sell-data {
@@ -872,7 +878,7 @@
         flex: 1;
       }
 
-      /* Step Header with Inline Checkbox */
+      /* Step Header with Toggle */
       .step-header {
         display: flex;
         justify-content: space-between;
@@ -880,33 +886,78 @@
         margin-bottom: 0.5rem;
       }
 
-      .primary-residence-inline {
+      .primary-residence-toggle {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        background: var(--bg);
-        padding: 0.5rem 0.75rem;
-        border-radius: var(--radius);
-        border: 1px solid var(--border);
+        gap: 0.75rem;
         font-size: 0.85rem;
       }
 
-      .primary-residence-inline input[type="checkbox"] {
-        width: 1rem;
-        height: 1rem;
-        accent-color: var(--primary);
-        cursor: pointer;
-      }
-
-      .primary-residence-inline label {
-        cursor: pointer;
-        margin: 0;
+      .toggle-label {
         font-weight: 500;
         color: var(--text);
         display: flex;
         align-items: center;
         gap: 0.25rem;
-        font-size: 0.85rem;
+      }
+
+      /* Beautiful Toggle Switch */
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 3rem;
+        height: 1.5rem;
+        cursor: pointer;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--border);
+        border-radius: 1.5rem;
+        transition: all 0.3s ease;
+        border: 2px solid var(--border);
+      }
+
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 1rem;
+        width: 1rem;
+        left: 0.125rem;
+        bottom: 0.125rem;
+        background: white;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .toggle-switch input:checked + .toggle-slider {
+        background: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(1.5rem);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      .toggle-switch:hover .toggle-slider {
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+
+      .toggle-switch input:focus + .toggle-slider {
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
       }
 
       .text-small {
@@ -1044,15 +1095,18 @@
               <i class="fas fa-home"></i>
               Property Details
             </h2>
-            <div class="primary-residence-inline">
-              <input type="checkbox" id="primaryResidence" checked />
-              <label for="primaryResidence">
+            <div class="primary-residence-toggle">
+              <span class="toggle-label">
                 Primary Residence
                 <span
                   class="tooltip"
                   title="If this qualifies as your primary residence you can exclude the gain of up to $500,000 from the sale of your property from taxation."
                   >?</span
                 >
+              </span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="primaryResidence" checked />
+                <span class="toggle-slider"></span>
               </label>
             </div>
           </div>
@@ -1806,7 +1860,7 @@
             d = document.querySelector(".monthly-rent input"),
             m = document.querySelector(".appreciation-rate input"),
             y = document.querySelector(".years-to-hold input"),
-            h = document.querySelector(".primary-residence-inline input"),
+            h = document.querySelector(".primary-residence-toggle input"),
             g = document.querySelector(".make-ready-costs input"),
             f = document.querySelector(".annual-maintenance-costs input"),
             v = document.querySelector(".capital-improvements-renting input"),
@@ -1826,7 +1880,7 @@
             T = document.querySelector(".wealth"),
             k = document.querySelector(".rent-sell-table tbody");
           let D,
-            F = 2;
+            F = 0; // Will be set to last year index when data loads
           const $ = new o();
           r.addEventListener("input", H),
             i.addEventListener("input", H),
@@ -2127,55 +2181,113 @@
                           labels: e.map((e) => `Year ${e.year}`),
                           datasets: [
                             {
-                              label: "Rent",
+                              label: "Rent Out Wealth",
                               data: e.map((e) => e.wealth.rent),
                               borderColor: "#2563eb",
-                              backgroundColor: "#2563eb",
+                              backgroundColor: "rgba(37, 99, 235, 0.1)",
+                              borderWidth: 3,
                               fill: !1,
-                              tension: 0.1,
+                              tension: 0.4,
+                              pointRadius: 6,
+                              pointHoverRadius: 8,
+                              pointBackgroundColor: "#2563eb",
+                              pointBorderColor: "#ffffff",
+                              pointBorderWidth: 2,
+                              pointHoverBackgroundColor: "#1d4ed8",
+                              pointHoverBorderColor: "#ffffff",
+                              pointHoverBorderWidth: 3,
                             },
                             {
-                              label: "Sell",
+                              label: "Sell Now Wealth",
                               data: e.map((e) => e.wealth.sell),
                               borderColor: "#dc2626",
-                              backgroundColor: "#dc2626",
+                              backgroundColor: "rgba(220, 38, 38, 0.1)",
+                              borderWidth: 3,
                               fill: !1,
-                              tension: 0.1,
+                              tension: 0.4,
+                              pointRadius: 6,
+                              pointHoverRadius: 8,
+                              pointBackgroundColor: "#dc2626",
+                              pointBorderColor: "#ffffff",
+                              pointBorderWidth: 2,
+                              pointHoverBackgroundColor: "#b91c1c",
+                              pointHoverBorderColor: "#ffffff",
+                              pointHoverBorderWidth: 3,
                             },
                           ],
                         },
                         plugins: [o, r],
                         options: {
+                          responsive: true,
+                          devicePixelRatio: 2,
                           scales: {
                             x: {
                               grid: {
-                                display: !1,
+                                display: true,
+                                color: "rgba(0, 0, 0, 0.05)",
+                                lineWidth: 1,
                               },
                               border: {
-                                width: 1,
-                                color: "#7e7e7e",
+                                width: 2,
+                                color: "#e2e8f0",
                               },
                               ticks: {
-                                maxTicksLimit: 5,
+                                maxTicksLimit: 6,
+                                color: "#64748b",
+                                font: {
+                                  size: 12,
+                                  weight: 500,
+                                },
+                                padding: 10,
+                              },
+                              title: {
+                                display: true,
+                                text: "Years",
+                                color: "#374151",
+                                font: {
+                                  size: 14,
+                                  weight: 600,
+                                },
+                                padding: 15,
                               },
                             },
                             y: {
                               grid: {
-                                display: !1,
+                                display: true,
+                                color: "rgba(0, 0, 0, 0.05)",
+                                lineWidth: 1,
                               },
                               border: {
-                                width: 1,
-                                color: "#7e7e7e",
+                                width: 2,
+                                color: "#e2e8f0",
                               },
                               ticks: {
                                 maxTicksLimit: 8,
+                                color: "#64748b",
+                                font: {
+                                  size: 12,
+                                  weight: 500,
+                                },
+                                padding: 10,
+                                callback: function(value) {
+                                  return new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'USD',
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                  }).format(value);
+                                },
                               },
-                            },
-                          },
-                          elements: {
-                            point: {
-                              radius: 0,
-                              hoverRadius: 0,
+                              title: {
+                                display: true,
+                                text: "Wealth ($)",
+                                color: "#374151",
+                                font: {
+                                  size: 14,
+                                  weight: 600,
+                                },
+                                padding: 15,
+                              },
                             },
                           },
                           interaction: {
@@ -2185,7 +2297,17 @@
                           plugins: {
                             legend: {
                               position: "top",
-                              align: "start",
+                              align: "center",
+                              labels: {
+                                usePointStyle: true,
+                                pointStyle: "circle",
+                                padding: 20,
+                                color: "#374151",
+                                font: {
+                                  size: 14,
+                                  weight: 600,
+                                },
+                              },
                             },
                             tooltip: {
                               enabled: !1,
@@ -2218,7 +2340,9 @@
                     D.update(),
                     D.resize();
                 })(e),
-                z(e[0]),
+                // Set F to last year index for initial positioning
+                F = e.length - 1,
+                z(e[F]),
                 V(e),
                 (t.rentSellData = e);
             })(re);
@@ -2332,7 +2456,7 @@
             content:
               "This is your time horizon. i.e. I want to see if it's better to sell now or later, and the impact that this decision has on my wealth",
           }),
-          tippy(".primary-residence-inline .tooltip", {
+          tippy(".primary-residence-toggle .tooltip", {
             content:
               "If this qualifies as your primary residence you can exclude the gain of up to $500,000 from the sale of your property from taxation.",
           }),
