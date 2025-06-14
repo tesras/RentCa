@@ -17,9 +17,15 @@
         --accent: #059669;
         --accent-light: #10b981;
         --success: #16a34a;
+        --error: #ef4444;
         --warning: #d97706;
         --bg: #f8fafc;
         --bg-secondary: #f1f5f9;
+
+        /* RGB versions for transparency */
+        --primary-rgb: 37, 99, 235;
+        --success-rgb: 22, 163, 74;
+        --error-rgb: 239, 68, 68;
         --card-bg: #ffffff;
         --text: #0f172a;
         --text-secondary: #64748b;
@@ -616,23 +622,28 @@
       .rent-sell-table-container {
         overflow-x: auto;
         background: var(--card-bg);
-        border-radius: var(--radius);
+        border-radius: var(--radius-lg);
         border: 1px solid var(--border);
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-lg);
         margin-top: 2rem;
       }
 
       .rent-sell-table {
         width: 100%;
         border-collapse: collapse;
+        font-size: 0.9rem;
       }
 
       .rent-sell-table th,
       .rent-sell-table td {
-        padding: 1rem 0.75rem;
-        text-align: left;
+        padding: 1.25rem 1rem;
+        text-align: right;
         border-bottom: 1px solid var(--border);
-        font-size: 0.9rem;
+      }
+
+      .rent-sell-table th:first-child,
+      .rent-sell-table td:first-child {
+        text-align: left;
       }
 
       .rent-sell-table th {
@@ -651,6 +662,11 @@
 
       .rent-sell-table tbody tr:hover {
         background-color: var(--bg);
+      }
+
+      .rent-sell-table .year-cell {
+        text-align: center;
+        font-weight: 600;
       }
 
       .disclaimer {
@@ -821,18 +837,76 @@
 
       .form-field-checkbox {
         display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1rem;
-        background: var(--bg);
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: var(--card-bg);
         border-radius: var(--radius);
-        border: 1px solid var(--border);
+        border: 2px solid var(--border);
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .form-field-checkbox:hover {
+        border-color: var(--primary);
+        background: var(--bg);
       }
 
       .form-field-checkbox input[type="checkbox"] {
-        width: 1.25rem;
-        height: 1.25rem;
+        width: 1.5rem;
+        height: 1.5rem;
         accent-color: var(--primary);
+        cursor: pointer;
+        margin-top: 0.125rem;
+        flex-shrink: 0;
+      }
+
+      .form-field-checkbox label {
+        cursor: pointer;
+        margin-bottom: 0;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+      }
+
+      /* Step Header with Inline Checkbox */
+      .step-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .primary-residence-inline {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg);
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        font-size: 0.85rem;
+      }
+
+      .primary-residence-inline input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--primary);
+        cursor: pointer;
+      }
+
+      .primary-residence-inline label {
+        cursor: pointer;
+        margin: 0;
+        font-weight: 500;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.85rem;
       }
 
       .text-small {
@@ -965,10 +1039,23 @@
 
         <!-- Step 1: Property Details -->
         <div class="step-panel active" id="step-1">
-          <h2 class="step-title">
-            <i class="fas fa-home"></i>
-            Property Details
-          </h2>
+          <div class="step-header">
+            <h2 class="step-title">
+              <i class="fas fa-home"></i>
+              Property Details
+            </h2>
+            <div class="primary-residence-inline">
+              <input type="checkbox" id="primaryResidence" checked />
+              <label for="primaryResidence">
+                Primary Residence
+                <span
+                  class="tooltip"
+                  title="If this qualifies as your primary residence you can exclude the gain of up to $500,000 from the sale of your property from taxation."
+                  >?</span
+                >
+              </label>
+            </div>
+          </div>
           <p class="step-subtitle">
             Enter your property's core financial information to begin the analysis
           </p>
@@ -1146,20 +1233,7 @@
                 <span class="icon">Yrs</span>
               </div>
             </div>
-            <div class="form-group primary-residency-checkbox with-tooltip">
-              <div class="form-field-checkbox">
-                <input type="checkbox" id="primaryResidence" checked />
-                <label for="primaryResidence"
-                  >Primary Residence?
-                  <span
-                    class="tooltip"
-                    title="If this qualifies as your primary residence you can exclude the gain of up to $500,000 from the sale of your property from taxation."
-                    >?</span
-                  >
-                </label>
-              </div>
-              <small>(at least 2 of last 5 years)</small>
-            </div>
+
           </div>
 
           <div class="stepper-actions">
@@ -1732,7 +1806,7 @@
             d = document.querySelector(".monthly-rent input"),
             m = document.querySelector(".appreciation-rate input"),
             y = document.querySelector(".years-to-hold input"),
-            h = document.querySelector(".primary-residency-checkbox input"),
+            h = document.querySelector(".primary-residence-inline input"),
             g = document.querySelector(".make-ready-costs input"),
             f = document.querySelector(".annual-maintenance-costs input"),
             v = document.querySelector(".capital-improvements-renting input"),
@@ -2161,9 +2235,9 @@
                 k.innerHTML = e
                   .map(
                     (e) =>
-                      `<tr>\n                <td>${A.format(
+                      `<tr>\n                <td class="year-cell">${
                         e.year
-                      )}</td>\n                <td>${A.format(
+                      }</td>\n                <td>${A.format(
                         e.rentalIncome
                       )}</td>\n                <td>${A.format(
                         e.mortgageExpense
@@ -2258,7 +2332,7 @@
             content:
               "This is your time horizon. i.e. I want to see if it's better to sell now or later, and the impact that this decision has on my wealth",
           }),
-          tippy(".primary-residency-checkbox .tooltip", {
+          tippy(".primary-residence-inline .tooltip", {
             content:
               "If this qualifies as your primary residence you can exclude the gain of up to $500,000 from the sale of your property from taxation.",
           }),
