@@ -589,40 +589,199 @@
         border-radius: var(--radius);
       }
 
+      /* Decision Banner */
+      .decision-banner {
+        background: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin: 2rem 0;
+        position: relative;
+      }
+
+      .decision-banner-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .decision-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: var(--radius);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      .decision-text {
+        flex: 1;
+      }
+
+      .decision-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem 0;
+        color: var(--text);
+      }
+
+      .decision-subtitle {
+        font-size: 0.95rem;
+        margin: 0;
+        color: var(--text-secondary);
+        line-height: 1.4;
+      }
+
+      /* Enhanced Data Cards */
       .rent-sell-data {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 1rem;
-        margin: 2rem 0;
+        margin: 1.5rem 0;
       }
 
       .rent-sell-data__card {
-        background: var(--bg);
-        padding: 1.5rem;
+        background: var(--card-bg);
+        padding: 1.25rem;
         border-radius: var(--radius);
-        text-align: center;
         border: 1px solid var(--border);
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .rent-sell-data__card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--border);
+        transition: all 0.3s ease;
       }
 
       .rent-sell-data__card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-4px);
         box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+      }
+
+      .rent-sell-data__card:hover::before {
+        background: var(--primary);
+      }
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+        background: var(--bg);
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+      }
+
+      .card-content {
+        flex: 1;
       }
 
       .rent-sell-data__card-title {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: var(--text-secondary);
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.25rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
       }
 
       .rent-sell-data__card-value {
-        font-size: 1.25rem;
+        font-size: 1.4rem;
         font-weight: 700;
         color: var(--text);
+        margin: 0 0 0.25rem 0;
+        line-height: 1.2;
+      }
+
+      .card-trend {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .card-trend i {
+        font-size: 0.7rem;
+      }
+
+      /* Card-specific styling */
+      .year-card .card-icon {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+      }
+
+      .rent-card .card-icon {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+      }
+
+      .rent-card .card-trend {
+        color: #10b981;
+      }
+
+      .sell-card .card-icon {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+      }
+
+      .sell-card .card-trend {
+        color: #f59e0b;
+      }
+
+      .difference-card .card-icon {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+      }
+
+      .difference-card .card-trend {
+        color: #8b5cf6;
+      }
+
+      /* Chart Instruction */
+      .chart-instruction {
+        margin: 1rem 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      .instruction-content {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg);
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .instruction-content i {
+        color: var(--primary);
+        font-size: 0.8rem;
       }
 
       .rent-sell-table-container {
@@ -642,23 +801,22 @@
 
       .rent-sell-table th,
       .rent-sell-table td {
-        padding: 1.25rem 1rem;
-        text-align: right;
+        padding: 0.75rem 0.5rem;
+        text-align: left;
         border-bottom: 1px solid var(--border);
       }
 
-      .rent-sell-table th:first-child,
-      .rent-sell-table td:first-child {
-        text-align: left;
-      }
-
       .rent-sell-table th {
-        background-color: var(--bg-secondary);
+        background-color: var(--bg);
         font-weight: 600;
         color: var(--text);
         position: sticky;
         top: 0;
         z-index: 10;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--border);
       }
 
       .rent-sell-table td {
@@ -671,8 +829,8 @@
       }
 
       .rent-sell-table .year-cell {
-        text-align: center;
         font-weight: 600;
+        color: var(--primary);
       }
 
       .disclaimer {
@@ -800,6 +958,28 @@
 
         .rent-sell-data {
           grid-template-columns: repeat(2, 1fr);
+          gap: 0.75rem;
+        }
+
+        .rent-sell-data__card {
+          padding: 1rem;
+          flex-direction: column;
+          text-align: center;
+          gap: 0.75rem;
+        }
+
+        .decision-banner {
+          padding: 1.25rem;
+        }
+
+        .decision-banner-content {
+          flex-direction: column;
+          text-align: center;
+          gap: 0.75rem;
+        }
+
+        .decision-title {
+          font-size: 1.1rem;
         }
 
         .stepper-actions {
@@ -833,6 +1013,25 @@
 
         .rent-sell-data {
           grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .decision-banner {
+          padding: 1.5rem;
+        }
+
+        .decision-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 1.25rem;
+        }
+
+        .decision-title {
+          font-size: 1.1rem;
+        }
+
+        .decision-subtitle {
+          font-size: 0.9rem;
         }
       }
 
@@ -1636,37 +1835,76 @@
             Visual analysis of your rent vs. sell decision with key insights
           </p>
 
-          <h3 class="rent-sell-output-text">
-            If you <span class="rent-or-sell">RENT OUT</span> your property,
-            you'll have <span class="wealth">$21,355</span> more wealth in
-            <span class="rent-or-sell-years">5</span> years
-          </h3>
+          <!-- Decision Summary Banner -->
+          <div class="decision-banner">
+            <div class="decision-banner-content">
+              <div class="decision-icon">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+              <div class="decision-text">
+                <h3 class="decision-title">
+                  Our Recommendation: <span class="rent-or-sell">RENT OUT</span>
+                </h3>
+                <p class="decision-subtitle">
+                  You'll have <span class="wealth">$21,355</span> more wealth in
+                  <span class="rent-or-sell-years">5</span> years by renting out your property
+                </p>
+              </div>
+            </div>
+          </div>
 
+          <!-- Interactive Data Cards -->
           <div class="rent-sell-data">
-            <div class="rent-sell-data__card">
-              <div class="rent-sell-data__card-title">Year</div>
-              <h4 class="rent-sell-data__card-value" data-type="year">5</h4>
+            <div class="rent-sell-data__card year-card">
+              <div class="card-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="card-content">
+                <div class="rent-sell-data__card-title">Analysis Year</div>
+                <h4 class="rent-sell-data__card-value" data-type="year">5</h4>
+              </div>
             </div>
-            <div class="rent-sell-data__card">
-              <div class="rent-sell-data__card-title">Rent Out</div>
-              <h4 class="rent-sell-data__card-value" data-type="rent-out">
-                $0
-              </h4>
+
+            <div class="rent-sell-data__card rent-card">
+              <div class="card-icon rent-icon">
+                <i class="fas fa-home"></i>
+              </div>
+              <div class="card-content">
+                <div class="rent-sell-data__card-title">Rent Out Wealth</div>
+                <h4 class="rent-sell-data__card-value" data-type="rent-out">$0</h4>
+                <div class="card-trend">
+                  <i class="fas fa-arrow-up"></i>
+                  <span>Growing Asset</span>
+                </div>
+              </div>
             </div>
-            <div class="rent-sell-data__card">
-              <div class="rent-sell-data__card-title">Sell Now</div>
-              <h4 class="rent-sell-data__card-value" data-type="sell-now">
-                $0
-              </h4>
+
+            <div class="rent-sell-data__card sell-card">
+              <div class="card-icon sell-icon">
+                <i class="fas fa-hand-holding-usd"></i>
+              </div>
+              <div class="card-content">
+                <div class="rent-sell-data__card-title">Sell Now Wealth</div>
+                <h4 class="rent-sell-data__card-value" data-type="sell-now">$0</h4>
+                <div class="card-trend">
+                  <i class="fas fa-chart-line"></i>
+                  <span>Invested Capital</span>
+                </div>
+              </div>
             </div>
-            <div class="rent-sell-data__card">
-              <div class="rent-sell-data__card-title">Difference In Wealth</div>
-              <h4
-                class="rent-sell-data__card-value"
-                data-type="difference-in-wealth"
-              >
-                $0
-              </h4>
+
+            <div class="rent-sell-data__card difference-card">
+              <div class="card-icon difference-icon">
+                <i class="fas fa-balance-scale"></i>
+              </div>
+              <div class="card-content">
+                <div class="rent-sell-data__card-title">Wealth Difference</div>
+                <h4 class="rent-sell-data__card-value" data-type="difference-in-wealth">$0</h4>
+                <div class="card-trend">
+                  <i class="fas fa-trophy"></i>
+                  <span>Net Advantage</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1676,9 +1914,12 @@
             </div>
           </div>
 
-          <p class="text-small text-center text-secondary">
-            Click on the chart to see year-by-year details
-          </p>
+          <div class="chart-instruction">
+            <div class="instruction-content">
+              <i class="fas fa-hand-pointer"></i>
+              <span>Click or drag on the chart to explore different years</span>
+            </div>
+          </div>
 
           <div class="stepper-actions">
             <button class="btn btn-secondary" id="prev-btn-4">
