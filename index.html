@@ -2692,6 +2692,9 @@
           }
           _(), N();
         })(),
+          // Remove title attributes to prevent double tooltips
+          document.querySelectorAll('.tooltip[title]').forEach(el => el.removeAttribute('title')),
+
           tippy(".home-value .tooltip", {
             content: "Enter the value of your property today",
           }),
