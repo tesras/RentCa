@@ -834,14 +834,29 @@
       }
 
       .disclaimer {
-        margin-top: 3rem;
-        padding: 1.5rem;
-        background: var(--bg-secondary);
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: var(--bg);
         border-radius: var(--radius);
-        border: 1px solid var(--border);
-        font-size: 0.85rem;
+        border-left: 4px solid var(--primary);
+        font-size: 0.8rem;
         color: var(--text-secondary);
-        line-height: 1.6;
+        line-height: 1.5;
+        position: relative;
+      }
+
+      .disclaimer::before {
+        content: '\f06a';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        color: var(--primary);
+        margin-right: 0.5rem;
+        font-size: 0.85rem;
+      }
+
+      .disclaimer p {
+        margin: 0;
+        display: inline;
       }
 
       /* Footer Styles */
@@ -1807,9 +1822,8 @@
 
           <div class="disclaimer">
             <p>
-              Disclaimer: This data is provided for informational purposes only.
-              It is not to be relied upon as a guarantee of any future result.
-              Consult a qualified professional before making any decisions.
+              <strong>Disclaimer:</strong> This analysis is for informational purposes only and should not be considered financial advice.
+              Consult a qualified professional before making investment decisions.
             </p>
           </div>
 
